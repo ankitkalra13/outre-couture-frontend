@@ -74,3 +74,4 @@ Open your browser at http://localhost:3000
 Script	Description
 npm run dev	- Start the development server
 npm run build	- Build for production
+# Last updated: Thu Aug 28 02:20:56 PM IST 2025
