@@ -8,7 +8,7 @@ import { fetchProducts } from '@/store/slices/productSlice';
 import { fetchMainCategories } from '@/store/slices/categorySlice';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getImageUrl } from '@/lib/utils';
+import { getImageUrl, getProductSlug } from '@/lib/utils';
 
 
 export default function ProductsPage() {
@@ -169,7 +169,7 @@ export default function ProductsPage() {
         
         <div className="flex items-center justify-between">
           <Link 
-                              href={`/products/${product.main_category_name?.toLowerCase()}/${product.seo_slug || product.id}`}
+                              href={`/products/${product.main_category_name?.toLowerCase()}/${getProductSlug(product)}`}
             className="bg-brand text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors flex items-center"
           >
             <Eye size={16} className="mr-2" />
