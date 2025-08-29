@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { useAppDispatch } from '@/store/hooks';
 import { submitRFQ } from '@/store/slices/rfqSlice';
 import { useToast } from '@/components/ui/Toast';
+import StaticPageSEO from '@/components/SEO/StaticPageSEO';
 
 import { 
   MapPin, 
@@ -103,9 +104,31 @@ export default function Contact() {
   ];
 
   return (
-    <div className="overflow-hidden">
-      {/* Hero Section */}
-     <section className="relative bg-cover py-10 overflow-hidden" style={{backgroundImage: "url('https://dubiz.co/public/assets/img/breadcrumbImages/contact-us.webp')", }}>
+    <>
+      <StaticPageSEO 
+        title="Contact Us | Outre Couture | Get in Touch with Luxury Fashion Experts"
+        description="Contact Outre Couture for personalized luxury fashion consultation. Our experts are here to help you with premium designer clothing, accessories, and fashion advice. Get in touch today!"
+        keywords={[
+          'contact outre couture',
+          'luxury fashion consultation',
+          'fashion expert advice',
+          'designer clothing help',
+          'premium accessories support',
+          'fashion consultation',
+          'customer service',
+          'outre couture contact',
+          'luxury fashion support'
+        ]}
+        image={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/assets/img/contact-banner.webp`}
+        url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/contact`}
+        type="website"
+        section="Customer Service"
+        tags={['contact', 'support', 'consultation', 'customer service']}
+      />
+      
+      <div className="overflow-hidden">
+        {/* Hero Section */}
+       <section className="relative bg-cover py-10 overflow-hidden" style={{backgroundImage: "url('https://dubiz.co/public/assets/img/breadcrumbImages/contact-us.webp')", }}>
         <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#002B98] to-[#00060C] opacity-75"></div>
 
         <div className="absolute top-5 left-0 z-10">
@@ -409,6 +432,7 @@ export default function Contact() {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
