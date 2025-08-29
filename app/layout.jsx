@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ReduxProvider from '@/components/providers/ReduxProvider';
 import AuthProvider from '@/components/providers/AuthProvider';
+import BaseSEO from '@/components/SEO/BaseSEO';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -80,6 +81,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <ReduxProvider>
+          <BaseSEO />
           <Header />
           <main>{children}</main>
           <Footer />

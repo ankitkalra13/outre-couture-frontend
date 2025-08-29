@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Minus, Plus, ChevronRight } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { fetchProduct } from '@/store/slices/productSlice';
+import { fetchProductBySlug } from '@/store/slices/productSlice';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -11,7 +11,7 @@ import { getImageUrl } from '@/lib/utils';
 import ProductSEO from '@/components/SEO/ProductSEO';
 
 export default function ProductDetailPage({ params }) {
-  const { mainCategory, id } = params;
+  const { mainCategory, slug } = params;
   const dispatch = useAppDispatch();
   const { currentProduct, loading, error } = useAppSelector((state) => state.products);
   
@@ -28,10 +28,11 @@ export default function ProductDetailPage({ params }) {
   const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      dispatch(fetchProduct(id));
+    if (slug) {
+      // First try to find product by slug, if not found, try by ID
+      dispatch(fetchProductBySlug({ mainCategory, slug }));
     }
-  }, [dispatch, id]);
+  }, [dispatch, slug, mainCategory]);
 
   // Show loader when component mounts
   useEffect(() => {
@@ -105,7 +106,7 @@ export default function ProductDetailPage({ params }) {
           description={currentProduct.seo_description || currentProduct.description}
           keywords={currentProduct.seo_keywords ? currentProduct.seo_keywords.split(',').map(k => k.trim()) : []}
           image={currentProduct.images && currentProduct.images.length > 0 ? getImageUrl(currentProduct.images[0]) : ''}
-          url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products/${mainCategory}/${id}`}
+          url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products/${mainCategory}/${slug}`}
           price={currentProduct.price || '0'}
           brand="Outre Couture"
           category={currentProduct.category_name || mainCategory}

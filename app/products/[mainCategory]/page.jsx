@@ -10,7 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getImageUrl } from '@/lib/utils';
-import Head from 'next/head';
+
 
 export default function CategoryProductsPage({ params }) {
   const { mainCategory } = params;
@@ -53,6 +53,53 @@ export default function CategoryProductsPage({ params }) {
   useEffect(() => {
     setShowLoader(true);
   }, []);
+
+  // SEO setup for category page
+  useEffect(() => {
+    // Update document title
+    document.title = `${mainCategory.charAt(0).toUpperCase() + mainCategory.slice(1)} Fashion - Outre Couture | Luxury ${mainCategory} Collection`;
+    
+    // Update meta tags
+    const updateMetaTag = (name, content) => {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', name);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+    
+    const updatePropertyTag = (property, content) => {
+      let meta = document.querySelector(`meta[property="${property}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('property', property);
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', content);
+    };
+    
+    // Update basic meta tags
+    updateMetaTag('description', `Discover our exclusive collection of luxury ${mainCategory} fashion items. Shop designer ${mainCategory} from Outre Couture, featuring premium quality and timeless style.`);
+    updateMetaTag('keywords', `${mainCategory}, fashion, luxury, designer, ${mainCategory} collection, Outre Couture, premium ${mainCategory}`);
+    
+    // Update Open Graph tags
+    updatePropertyTag('og:title', `${mainCategory.charAt(0).toUpperCase() + mainCategory.slice(1)} Fashion - Outre Couture`);
+    updatePropertyTag('og:description', `Discover our exclusive collection of luxury ${mainCategory} fashion items.`);
+    updatePropertyTag('og:type', 'website');
+    updatePropertyTag('og:site_name', 'Outre Couture');
+    
+    // Update canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products/${mainCategory}`);
+    
+  }, [mainCategory]);
 
   // Control loader timing - show for at least 1 second
   useEffect(() => {
@@ -173,7 +220,7 @@ export default function CategoryProductsPage({ params }) {
         
         <div className="flex items-center justify-between">
           <Link 
-            href={`/products/${mainCategory}/${product.id}`}
+                              href={`/products/${mainCategory}/${product.seo_slug || product.id}`}
             className="bg-brand text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors flex items-center"
           >
             <Eye size={16} className="mr-2" />
@@ -187,17 +234,6 @@ export default function CategoryProductsPage({ params }) {
   // Always show the main layout structure to prevent shifting
   return (
     <>
-      <Head>
-        <title>{`${mainCategory.charAt(0).toUpperCase() + mainCategory.slice(1)} Fashion - Outre Couture | Luxury ${mainCategory} Collection`}</title>
-        <meta name="description" content={`Discover our exclusive collection of luxury ${mainCategory} fashion items. Shop designer ${mainCategory} from Outre Couture, featuring premium quality and timeless style.`} />
-        <meta name="keywords" content={`${mainCategory}, fashion, luxury, designer, ${mainCategory} collection, Outre Couture, premium ${mainCategory}`} />
-        <meta property="og:title" content={`${mainCategory.charAt(0).toUpperCase() + mainCategory.slice(1)} Fashion - Outre Couture`} />
-        <meta property="og:description" content={`Discover our exclusive collection of luxury ${mainCategory} fashion items.`} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Outre Couture" />
-        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products/${mainCategory}`} />
-      </Head>
-      
       <div className="min-h-screen bg-gray-50 py-20">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}

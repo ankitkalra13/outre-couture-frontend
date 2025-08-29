@@ -98,6 +98,22 @@ export const fetchProductsByMainCategory = createAsyncThunk(
   }
 );
 
+export const fetchProductBySlug = createAsyncThunk(
+  'products/fetchProductBySlug',
+  async ({ mainCategory, slug }, { rejectWithValue }) => {
+    try {
+      const response = await apiService.getProductBySlug(mainCategory, slug);
+      if (response.success) {
+        return response.product;
+      } else {
+        return rejectWithValue(response.error || 'Failed to fetch product by slug');
+      }
+    } catch (error) {
+      return rejectWithValue(error.message || 'Failed to fetch product by slug');
+    }
+  }
+);
+
 // Initial state
 const initialState = {
   products: [],
@@ -253,6 +269,21 @@ const productSlice = createSlice({
         };
       })
       .addCase(fetchProductsByMainCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // Fetch Product By Slug
+    builder
+      .addCase(fetchProductBySlug.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProductBySlug.fulfilled, (state, action) => {
+        state.loading = false;
+        state.currentProduct = action.payload;
+      })
+      .addCase(fetchProductBySlug.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
