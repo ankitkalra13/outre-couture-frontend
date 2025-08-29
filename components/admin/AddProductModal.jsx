@@ -16,6 +16,11 @@ const productSchema = z.object({
   category_id: z.string().min(1, 'Please select a category'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   is_active: z.boolean().default(true),
+  // SEO Fields
+  seo_title: z.string().optional(),
+  seo_description: z.string().optional(),
+  seo_keywords: z.string().optional(),
+  seo_slug: z.string().optional(),
 });
 
 export default function AddProductModal({ isOpen, onClose, editingProduct = null }) {
@@ -27,6 +32,12 @@ export default function AddProductModal({ isOpen, onClose, editingProduct = null
     material: '',
     color: '',
     size: '',
+  });
+  const [seoData, setSeoData] = useState({
+    seo_title: '',
+    seo_description: '',
+    seo_keywords: '',
+    seo_slug: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +55,10 @@ export default function AddProductModal({ isOpen, onClose, editingProduct = null
       category_id: '',
       description: '',
       is_active: true,
+      seo_title: '',
+      seo_description: '',
+      seo_keywords: '',
+      seo_slug: '',
     },
   });
 
@@ -55,12 +70,28 @@ export default function AddProductModal({ isOpen, onClose, editingProduct = null
       setValue('category_id', editingProduct.category_id);
       setValue('description', editingProduct.description);
       setValue('is_active', editingProduct.is_active);
+      setValue('seo_title', editingProduct.seo_title || '');
+      setValue('seo_description', editingProduct.seo_description || '');
+      setValue('seo_keywords', editingProduct.seo_keywords || '');
+      setValue('seo_slug', editingProduct.seo_slug || '');
       setImages(editingProduct.images || []);
       setSpecifications(editingProduct.specifications || { material: '', color: '', size: '' });
+      setSeoData({
+        seo_title: editingProduct.seo_title || '',
+        seo_description: editingProduct.seo_description || '',
+        seo_keywords: editingProduct.seo_keywords || '',
+        seo_slug: editingProduct.seo_slug || '',
+      });
     } else {
       reset();
       setImages([]);
       setSpecifications({ material: '', color: '', size: '' });
+      setSeoData({
+        seo_title: '',
+        seo_description: '',
+        seo_keywords: '',
+        seo_slug: '',
+      });
     }
   }, [editingProduct, setValue, reset]);
 
@@ -94,6 +125,11 @@ export default function AddProductModal({ isOpen, onClose, editingProduct = null
         ...data,
         images: images.map(img => img.name),
         specifications,
+        // SEO Data
+        seo_title: data.seo_title || data.name,
+        seo_description: data.seo_description || data.description.substring(0, 160),
+        seo_keywords: data.seo_keywords || '',
+        seo_slug: data.seo_slug || data.name.toLowerCase().replace(/\s+/g, '-'),
       };
 
       if (editingProduct) {
@@ -324,6 +360,66 @@ export default function AddProductModal({ isOpen, onClose, editingProduct = null
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+
+            {/* SEO Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">SEO Settings</h3>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    SEO Title
+                  </label>
+                  <input
+                    type="text"
+                    {...register('seo_title')}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
+                    placeholder="SEO optimized title (optional)"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Leave empty to use product name</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    SEO Slug
+                  </label>
+                  <input
+                    type="text"
+                    {...register('seo_slug')}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
+                    placeholder="URL-friendly slug (optional)"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Leave empty to auto-generate from name</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  SEO Description
+                </label>
+                <textarea
+                  {...register('seo_description')}
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
+                  placeholder="SEO meta description (optional, max 160 characters)"
+                  maxLength={160}
+                />
+                <p className="text-xs text-gray-500 mt-1">Leave empty to use product description (truncated to 160 chars)</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  SEO Keywords
+                </label>
+                <textarea
+                  {...register('seo_keywords')}
+                  rows={2}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent"
+                  placeholder="Comma-separated keywords (e.g., fashion, luxury, leather, handbag)"
+                />
+                <p className="text-xs text-gray-500 mt-1">Separate keywords with commas for better SEO</p>
               </div>
             </div>
 

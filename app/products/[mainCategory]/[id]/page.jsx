@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getImageUrl } from '@/lib/utils';
+import ProductSEO from '@/components/SEO/ProductSEO';
 
 export default function ProductDetailPage({ params }) {
   const { mainCategory, id } = params;
@@ -96,7 +97,23 @@ export default function ProductDetailPage({ params }) {
 
   // Always show the main layout structure to prevent shifting
   return (
-    <div className="min-h-screen bg-gray-50 py-20">
+    <>
+      {/* Dynamic SEO */}
+      {currentProduct && (
+        <ProductSEO
+          title={currentProduct.seo_title || currentProduct.name}
+          description={currentProduct.seo_description || currentProduct.description}
+          keywords={currentProduct.seo_keywords ? currentProduct.seo_keywords.split(',').map(k => k.trim()) : []}
+          image={currentProduct.images && currentProduct.images.length > 0 ? getImageUrl(currentProduct.images[0]) : ''}
+          url={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products/${mainCategory}/${id}`}
+          price={currentProduct.price || '0'}
+          brand="Outre Couture"
+          category={currentProduct.category_name || mainCategory}
+          availability={currentProduct.is_active ? 'InStock' : 'OutOfStock'}
+        />
+      )}
+      
+      <div className="min-h-screen bg-gray-50 py-20">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8">
@@ -346,5 +363,6 @@ export default function ProductDetailPage({ params }) {
         </div>
       </div>
     </div>
+    </>
   );
 }

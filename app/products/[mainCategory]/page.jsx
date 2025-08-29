@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getImageUrl } from '@/lib/utils';
+import Head from 'next/head';
 
 export default function CategoryProductsPage({ params }) {
   const { mainCategory } = params;
@@ -185,7 +186,19 @@ export default function CategoryProductsPage({ params }) {
 
   // Always show the main layout structure to prevent shifting
   return (
-    <div className="min-h-screen bg-gray-50 py-20">
+    <>
+      <Head>
+        <title>{`${mainCategory.charAt(0).toUpperCase() + mainCategory.slice(1)} Fashion - Outre Couture | Luxury ${mainCategory} Collection`}</title>
+        <meta name="description" content={`Discover our exclusive collection of luxury ${mainCategory} fashion items. Shop designer ${mainCategory} from Outre Couture, featuring premium quality and timeless style.`} />
+        <meta name="keywords" content={`${mainCategory}, fashion, luxury, designer, ${mainCategory} collection, Outre Couture, premium ${mainCategory}`} />
+        <meta property="og:title" content={`${mainCategory.charAt(0).toUpperCase() + mainCategory.slice(1)} Fashion - Outre Couture`} />
+        <meta property="og:description" content={`Discover our exclusive collection of luxury ${mainCategory} fashion items.`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Outre Couture" />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products/${mainCategory}`} />
+      </Head>
+      
+      <div className="min-h-screen bg-gray-50 py-20">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8">
@@ -423,5 +436,6 @@ export default function CategoryProductsPage({ params }) {
         </div>
       </div>
     </div>
+    </>
   );
 }

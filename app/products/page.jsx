@@ -9,6 +9,7 @@ import { fetchMainCategories } from '@/store/slices/categorySlice';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getImageUrl } from '@/lib/utils';
+import Head from 'next/head';
 
 export default function ProductsPage() {
   const dispatch = useAppDispatch();
@@ -134,7 +135,19 @@ export default function ProductsPage() {
 
   // Always show the main layout structure to prevent shifting
   return (
-    <div className="min-h-screen bg-gray-50 py-20">
+    <>
+      <Head>
+        <title>Products - Outre Couture | Luxury Fashion & Accessories</title>
+        <meta name="description" content="Discover our exclusive collection of luxury fashion products, accessories, and designer items. Shop the latest trends in men's and women's fashion from Outre Couture." />
+        <meta name="keywords" content="fashion, luxury, accessories, designer, men's fashion, women's fashion, handbags, clothing, Outre Couture" />
+        <meta property="og:title" content="Products - Outre Couture | Luxury Fashion & Accessories" />
+        <meta property="og:description" content="Discover our exclusive collection of luxury fashion products, accessories, and designer items." />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Outre Couture" />
+        <link rel="canonical" href={`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/products`} />
+      </Head>
+      
+      <div className="min-h-screen bg-gray-50 py-20">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8">
@@ -355,5 +368,6 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
